@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:garbage_management/Admin/Recycle%20warning.dart';
 import 'package:garbage_management/Admin/SendWarningDriver.dart';
+import 'package:garbage_management/Controllers/AdminServices.dart';
 import 'package:garbage_management/constants/colors.dart';
 import 'package:garbage_management/widgets/AdNotificationCad.dart';
 import 'package:garbage_management/widgets/CustomText.dart';
 import 'package:garbage_management/widgets/NotificationCard.dart';
+import 'package:garbage_management/widgets/WarnigCard.dart';
 
 class Warnings extends StatelessWidget {
   const Warnings({super.key});
@@ -60,8 +63,10 @@ class Warnings extends StatelessWidget {
                   ),
                    TextButton(
                     onPressed: () {
-                      // Close the dialog
-                    
+                      print('object');
+                       Navigator.pushReplacement(context, MaterialPageRoute(builder: (ctx){
+                      return SendWarning2();
+                     }));
                     },
                     child: Text('Recycling team'),
                   ),
@@ -77,17 +82,25 @@ class Warnings extends StatelessWidget {
                 height: 10,
               ),
               Expanded(
-                child: ListView.builder(
-                  itemCount: 5,
-                  itemBuilder: (context, index) {
-                    return AdNotifiactionCard(
-                        title: 'title',
-                        time: '1.00 pm',
-                        date: '12/02/2024',
-                        content:
-                            'Warnings content shown here...' // Add the actual date field if available
-                        );
-                  },
+                child: FutureBuilder(
+                  future: warningData(),
+                  builder: (context,snap) {
+                      final users = snap.data?.docs ?? [];
+                    return ListView.builder(
+                      itemCount: users.length,
+                      itemBuilder: (context, index) {
+                         var request = users[index].data() as Map<String, dynamic>;
+                         var id = users[index].id;
+                        return WarningCard(
+                            title: 'To : ${request['name']['username']}',
+                            time: '1.00 pm',
+                            date: '12/02/2024',
+                            content:
+                                 request['warning']// Add the actual date field if available
+                            );
+                      },
+                    );
+                  }
                 ),
               ),
             ],

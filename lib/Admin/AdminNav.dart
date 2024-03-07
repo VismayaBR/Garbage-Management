@@ -31,7 +31,7 @@ class _AdminNavState extends State<AdminNav> with SingleTickerProviderStateMixin
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-     appBar: AppBar(),
+    
       bottomNavigationBar: BottomBar(
         child: TabBar(
           controller: tabController,

@@ -1,5 +1,6 @@
 // -------------UserList-----------------
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/src/widgets/editable_text.dart';
 
 Future<QuerySnapshot<Map<String, dynamic>>> getUsersData() async {
   try {
@@ -156,4 +157,30 @@ Future<QuerySnapshot<Map<String, dynamic>>> getRecyclingComplaints() async {
     print('Error fetching data: $e');
     throw e; // Rethrow the exception to be caught by the FutureBuilder
   }
+}
+
+// ----------warning list-------------
+Future<QuerySnapshot<Map<String, dynamic>>> warningData() async {
+  try {
+    QuerySnapshot<Map<String, dynamic>> querySnapshot =
+        await FirebaseFirestore.instance
+            .collection('warning')
+            
+            .get();
+
+    print('Firestore Data: ${querySnapshot.docs}');
+    
+    return querySnapshot;
+  } catch (e) {
+    print('Error fetching data: $e');
+    throw e; // Rethrow the exception to be caught by the FutureBuilder
+  }
+}
+
+// -------------send Reply-------------
+sendReply(String id, TextEditingController rply){
+  FirebaseFirestore.instance.collection('complaints').doc(id).update({
+    'replay': rply.text,
+    'status':1
+  });
 }

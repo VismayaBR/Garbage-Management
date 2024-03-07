@@ -1,12 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:garbage_management/Admin/DriverComplaints.dart';
-import 'package:garbage_management/Admin/DriverList.dart';
-import 'package:garbage_management/Admin/RecycleList.dart';
 import 'package:garbage_management/Admin/RecyclingComplaints.dart';
-import 'package:garbage_management/Driver/BioDegradable.dart';
-import 'package:garbage_management/Driver/Degradable.dart';
-import 'package:garbage_management/Driver/Tabbar.dart';
-import 'package:garbage_management/Driver/UsersList.dart';
+import 'package:garbage_management/Login.dart';
 import 'package:garbage_management/constants/colors.dart';
 import 'package:garbage_management/widgets/CustomText.dart';
 
@@ -36,47 +31,22 @@ class AdminTabbar extends StatelessWidget {
             ),
           ),
           actions: [
-            // Padding(
-            //   padding: const EdgeInsets.only(right: 20),
-            //   child: InkWell(
-            //     // onTap: () {
-            //     //   Navigator.push(
-            //     //       context,
-            //     //       MaterialPageRoute(
-            //     //         builder: (context) => (),
-            //     //       ));
-            //     // },
-            //     child: Stack(
-            //       children: [
-            //         Icon(
-            //           Icons.notifications,
-            //           color: Colors.yellow[700],
-            //           size: 30,
-            //         ),
-            //          Positioned( // notification Icon......
-            //             left: 15,
-            //             top: 5,
-            //             child: CircleAvatar(
-            //               radius: 6,
-            //               backgroundColor: Colors.red,
-            //             )),
-            //       ],
-            //     ),
-            //   ),
-            // ),
-            // SizedBox(width: 20,),
-                 InkWell(
-                  // onTap: () {
-                  //   Navigator.push(
-                  //       context,
-                  //       MaterialPageRoute(
-                  //         // go to user profile screen..
-                  //         builder: (context) => Login(),
-                  //       ));
-                  // },
-                  child: Icon(Icons.power_settings_new_outlined,size: 20,)
-                ),
-                SizedBox(width: 20,),
+            InkWell(
+                onTap: () {
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        // go to user profile screen..
+                        builder: (context) => Login(),
+                      ));
+                },
+                child: Icon(
+              Icons.power_settings_new_outlined,
+              size: 20,
+            )),
+            SizedBox(
+              width: 20,
+            ),
           ],
         ),
         body: Padding(
@@ -91,14 +61,14 @@ class AdminTabbar extends StatelessWidget {
                     borderRadius: BorderRadius.circular(10),
                     color: customGreen),
                 child: TabBar(
-                  
-                  tabs:  [
+                  tabs: [
                     Tab(
                         child: CustomText(
-                            text: "Driver",
-                            weight: FontWeight.w400,
-                            size: 14,
-                            color: customBalck,)),
+                      text: "Driver",
+                      weight: FontWeight.w400,
+                      size: 14,
+                      color: customBalck,
+                    )),
                     Tab(
                         child: CustomText(
                             text: "Recycling team",
@@ -107,8 +77,7 @@ class AdminTabbar extends StatelessWidget {
                             color: customBalck)),
                   ],
                   indicator: BoxDecoration(
-                      borderRadius:
-                          BorderRadius.all(const Radius.circular(10)),
+                      borderRadius: BorderRadius.all(const Radius.circular(10)),
                       // Creates border
                       color: maincolor),
                   dividerColor: Colors.transparent,

@@ -1,11 +1,10 @@
-import 'package:flutter/material.dart';
+ import 'package:flutter/material.dart';
 import 'package:garbage_management/Controllers/AdminServices.dart';
 import 'package:garbage_management/constants/colors.dart';
 import 'package:garbage_management/widgets/CustomText.dart';
 
 class UsersLists extends StatefulWidget {
   const UsersLists({super.key});
-
   @override
   State<UsersLists> createState() => _UsersListsState();
 }
