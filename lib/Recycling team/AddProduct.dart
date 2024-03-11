@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:garbage_management/Recycling%20team/ProductList.dart';
 import 'package:garbage_management/constants/colors.dart';
@@ -19,7 +20,8 @@ class _AddProductState extends State<AddProduct> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _priceController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
-  File? _image;
+   XFile? _image;
+  String? imageUrl;
 
   @override
   void dispose() {
@@ -29,26 +31,51 @@ class _AddProductState extends State<AddProduct> {
     super.dispose();
   }
 
-  Future<void> _getImage() async {
-    final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+   Future<void> pickImage() async {
+      final ImagePicker _picker = ImagePicker();
 
-    if (pickedFile != null) {
-      setState(() {
-        _image = File(pickedFile.path);
-      });
+      try {
+        XFile? pickedImage = await _picker.pickImage(source: ImageSource.camera);
+
+        if (pickedImage != null) {
+          setState(() {
+            _image = pickedImage;
+          });
+
+          // Upload the picked image
+          await uploadImage();
+        }
+      } catch (e) {
+        print('Error picking image: $e');
+      }
+    }
+
+  Future<void> uploadImage() async {
+    try {
+      if (_image != null) {
+        Reference storageReference =
+            FirebaseStorage.instance.ref().child('uploads/${_image!.name}');
+
+        await storageReference.putFile(File(_image!.path));
+
+        // Get the download URL
+        imageUrl = await storageReference.getDownloadURL();
+      }
+    } catch (e) {
+      print('Error uploading image: $e');
     }
   }
 
   void _addProductToFirestore() {
     if (_formKey.currentState?.validate() ?? false) {
-      // Use _image in your Firestore logic if you want to store the image path or upload it to a storage service
+
       String imagePath = _image?.path ?? '';
 
       FirebaseFirestore.instance.collection('product').add({
         'name': _nameController.text,
         'desc': _descriptionController.text,
         'price': _priceController.text,
-        'imagePath': imagePath,
+        'imagePath': imageUrl,
       });
 
       Navigator.push(context, MaterialPageRoute(builder: (ctx) {
@@ -74,14 +101,14 @@ class _AddProductState extends State<AddProduct> {
                   height: 30,
                 ),
                 InkWell(
-                  onTap: _getImage,
+                  onTap: pickImage,
                   child: Container(
                     height: 100,
                     width: double.infinity,
                     color: maincolor,
                     child: _image == null
                         ? Center(child: Text('Upload an Image'))
-                        : Image.file(_image!),
+                        :  Image.file(File(_image!.path))
                   ),
                 ),
                 CustomTextField(
@@ -125,7 +152,10 @@ class _AddProductState extends State<AddProduct> {
                   height: 40,
                 ),
                 ElevatedButton(
-                  onPressed: _addProductToFirestore,
+                  onPressed: (){
+                    uploadImage();
+                    _addProductToFirestore();
+                  },
                   child: Text('Add Product'),
                 )
               ],

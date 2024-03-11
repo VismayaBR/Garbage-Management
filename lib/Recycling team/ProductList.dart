@@ -69,6 +69,9 @@ class _ProductListState extends State<ProductList> {
                 return Card(
                   color: maincolor,
                   child: ListTile(
+                    leading: CircleAvatar(
+                      backgroundImage: NetworkImage(request['imagePath']),
+                    ),
                     subtitle: CustomText(
                         size: 13,
                         weight: FontWeight.normal,

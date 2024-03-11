@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:garbage_management/Admin/AdminNav.dart';
 import 'package:garbage_management/Controllers/LoginService.dart';
@@ -22,6 +23,9 @@ class _LoginState extends State<Login> {
 
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  var name;
+  var address;
+  var phone;
 
   @override
   Widget build(BuildContext context) {
@@ -89,45 +93,77 @@ class _LoginState extends State<Login> {
                   InkWell(
                     onTap: () async {
                       if (_formKey.currentState?.validate() ?? false) {
-                        try {
-                          print('object');
-                         
-                          // Call your login function asynchronously
-                          var user = await login(
-                            email: _emailController.text,
-                            password: _passwordController.text,
-                          );
-              
-                          print('______________${user[0][1]}');
-              
-                          SharedPreferences spref =
-                              await SharedPreferences.getInstance();
-                          spref.setString('id', user[0][0]);
-              
-                          print("Login successful: $user");
-              
-                          if (user[0][1] == 'User') {
+                        print('object');
+
+                        // Call your login function asynchronously
+                        var user = await login(
+                          email: _emailController.text,
+                          password: _passwordController.text,
+                        );
+
+                        print('______________${user[0][1]}');
+
+                        SharedPreferences spref =
+                            await SharedPreferences.getInstance();
+                        spref.setString('id', user[0][0]);
+
+                        print("Login successful: $user");
+
+                        if (user[0][1] == 'User') {
+                          final QuerySnapshot<Map<String, dynamic>>
+                              userSnapshot = await FirebaseFirestore.instance
+                                  .collection('users')
+                                  .where('email',
+                                      isEqualTo: _emailController.text)
+                                  .where('password',
+                                      isEqualTo: _passwordController.text)
+                                  // .where('status', isEqualTo: 1)
+                                  .get();
+
+                          if (userSnapshot.docs.isNotEmpty) {
+                            print('===============================');
+                            setState(() {
+                              userId = userSnapshot.docs[0].id;
+                              name = userSnapshot.docs[0]['username'];
+                              address = userSnapshot.docs[0]['address'];
+                              phone = userSnapshot.docs[0]['phone'];
+                            });
+
+                            // print('.................$mechId');
+                            SharedPreferences spref =
+                                await SharedPreferences.getInstance();
+                            spref.setString('user_id', userId);
+                            spref.setString('name', name);
+                            spref.setString('address', address);
+                            spref.setString('phone', phone);
+
+                            var nm = spref.getString('name');
+                            var em = spref.getString('address');
+                            var ph = spref.getString('phone');
+
+                            print('---------------$address');
+
                             Navigator.push(context,
                                 MaterialPageRoute(builder: (ctx) {
                               return PublicNav();
                             }));
                             datas.clear();
                           }
-                           if (user[0][1] == 'Driver') {
+                          if (user[0][1] == 'Driver') {
                             Navigator.push(context,
                                 MaterialPageRoute(builder: (ctx) {
                               return UserNav();
                             }));
                             datas.clear();
                           }
-                           if (user[0][1] == 'Recycling team') {
+                          if (user[0][1] == 'Recycling team') {
                             Navigator.push(context,
                                 MaterialPageRoute(builder: (ctx) {
                               return ProductList();
                             }));
                             datas.clear();
                           }
-                          
+
                           if (user[0][1] == 'admin') {
                             Navigator.push(context,
                                 MaterialPageRoute(builder: (ctx) {
@@ -135,14 +171,10 @@ class _LoginState extends State<Login> {
                             }));
                             datas.clear();
                           }
-                        } catch (error) {
-                          print("Login failed: $error");
                         }
                       }
                     },
                     child: Container(
-              
-                      
                       height: 45,
                       width: 200,
                       decoration: BoxDecoration(
@@ -160,7 +192,8 @@ class _LoginState extends State<Login> {
                     padding: const EdgeInsets.all(8.0),
                     child: InkWell(
                       onTap: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (ctx) {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (ctx) {
                           return Register();
                         }));
                       },

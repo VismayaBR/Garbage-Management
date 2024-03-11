@@ -1,16 +1,36 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:garbage_management/Public/OrderPage.dart';
 import 'package:garbage_management/constants/colors.dart';
 import 'package:garbage_management/widgets/CustomText.dart';
 
 class ViewProduct extends StatefulWidget {
-  const ViewProduct({Key? key}) : super(key: key);
+  String product;
+  String price;
+  String desc;
+  var image;
+  ViewProduct(
+      {Key? key,
+      required this.product,
+      required this.price,
+      required this.desc,
+      required this.image})
+      : super(key: key);
 
   @override
   State<ViewProduct> createState() => _ViewProductState();
 }
 
 class _ViewProductState extends State<ViewProduct> {
+  @override
+  void initState() {
+    pro();
+  }
+
+  pro() {
+    print(widget.product);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,9 +43,13 @@ class _ViewProductState extends State<ViewProduct> {
           children: [
             Column(
               children: [
-                Image.asset(
-                  'assets/product.png',
-                  // Adjust the width as needed
+                SizedBox(
+                  height: 200,
+                  width: 200,
+                  child: Image.network(
+                    widget.image, fit: BoxFit.cover,
+                    // Adjust the width as needed
+                  ),
                 ),
 
                 SizedBox(
@@ -39,14 +63,14 @@ class _ViewProductState extends State<ViewProduct> {
                           size: 20,
                           weight: FontWeight.bold,
                           color: customGreen,
-                          text: 'Product'),
+                          text: widget.product),
                     ],
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: Text(
-                    'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever',
+                    widget.desc,
                     textAlign: TextAlign.left, // Align text to the center
                   ),
                 ),
@@ -59,7 +83,7 @@ class _ViewProductState extends State<ViewProduct> {
                           size: 20,
                           weight: FontWeight.bold,
                           color: customGreen,
-                          text: 'Rs. 150'),
+                          text: widget.price),
                     ],
                   ),
                 ),
@@ -90,10 +114,14 @@ class _ViewProductState extends State<ViewProduct> {
                   child: Padding(
                     padding: const EdgeInsets.all(18.0),
                     child: InkWell(
-                      onTap: (){
-                       Navigator.push(context, MaterialPageRoute(builder:(ctx){
-                        return OrderPage();
-                       }));
+                      onTap: () {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (ctx) {
+                          return OrderPage(
+                              image: widget.image,
+                              price: widget.price,
+                              name: widget.product);
+                        }));
                       },
                       child: Container(
                         height: 50,
