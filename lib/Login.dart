@@ -26,6 +26,8 @@ class _LoginState extends State<Login> {
   var name;
   var address;
   var phone;
+  var email;
+  var location;
 
   @override
   Widget build(BuildContext context) {
@@ -127,6 +129,8 @@ class _LoginState extends State<Login> {
                               name = userSnapshot.docs[0]['username'];
                               address = userSnapshot.docs[0]['address'];
                               phone = userSnapshot.docs[0]['phone'];
+                              email = userSnapshot.docs[0]['email'];
+                              location = userSnapshot.docs[0]['location'];
                             });
 
                             // print('.................$mechId');
@@ -136,6 +140,8 @@ class _LoginState extends State<Login> {
                             spref.setString('name', name);
                             spref.setString('address', address);
                             spref.setString('phone', phone);
+                            spref.setString('email', email);
+                            spref.setString('location', location);
 
                             var nm = spref.getString('name');
                             var em = spref.getString('address');
@@ -149,19 +155,94 @@ class _LoginState extends State<Login> {
                             }));
                             datas.clear();
                           }
+                        }
                           if (user[0][1] == 'Driver') {
-                            Navigator.push(context,
-                                MaterialPageRoute(builder: (ctx) {
-                              return UserNav();
-                            }));
-                            datas.clear();
+                            final QuerySnapshot<Map<String, dynamic>>
+                                userSnapshot = await FirebaseFirestore.instance
+                                    .collection('users')
+                                    .where('email',
+                                        isEqualTo: _emailController.text)
+                                    .where('password',
+                                        isEqualTo: _passwordController.text)
+                                    // .where('status', isEqualTo: 1)
+                                    .get();
+                            if (userSnapshot.docs.isNotEmpty) {
+                              print('===============================');
+                              setState(() {
+                                userId = userSnapshot.docs[0].id;
+                                name = userSnapshot.docs[0]['username'];
+                                address = userSnapshot.docs[0]['address'];
+                                phone = userSnapshot.docs[0]['phone'];
+                                email = userSnapshot.docs[0]['email'];
+                                location = userSnapshot.docs[0]['location'];
+                              });
+
+                              // print('.................$mechId');
+                              SharedPreferences spref =
+                                  await SharedPreferences.getInstance();
+                              spref.setString('user_id', userId);
+                              spref.setString('name', name);
+                              spref.setString('address', address);
+                              spref.setString('phone', phone);
+                              spref.setString('email', email);
+                              spref.setString('location', location);
+
+                              var nm = spref.getString('name');
+                              var em = spref.getString('address');
+                              var ph = spref.getString('phone');
+
+                              print('---------------$address');
+
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (ctx) {
+                                return UserNav();
+                              }));
+                              datas.clear();
+                            }
                           }
                           if (user[0][1] == 'Recycling team') {
-                            Navigator.push(context,
-                                MaterialPageRoute(builder: (ctx) {
-                              return ProductList();
-                            }));
-                            datas.clear();
+                            final QuerySnapshot<Map<String, dynamic>>
+                                userSnapshot = await FirebaseFirestore.instance
+                                    .collection('users')
+                                    .where('email',
+                                        isEqualTo: _emailController.text)
+                                    .where('password',
+                                        isEqualTo: _passwordController.text)
+                                    // .where('status', isEqualTo: 1)
+                                    .get();
+                            if (userSnapshot.docs.isNotEmpty) {
+                              print('===============================');
+                              setState(() {
+                                userId = userSnapshot.docs[0].id;
+                                name = userSnapshot.docs[0]['username'];
+                                address = userSnapshot.docs[0]['address'];
+                                phone = userSnapshot.docs[0]['phone'];
+                                email = userSnapshot.docs[0]['email'];
+                                location = userSnapshot.docs[0]['location'];
+                              });
+
+                              // print('.................$mechId');
+                              SharedPreferences spref =
+                                  await SharedPreferences.getInstance();
+                              spref.setString('user_id', userId);
+                              spref.setString('name', name);
+                              spref.setString('address', address);
+                              spref.setString('phone', phone);
+                              spref.setString('email', email);
+                              spref.setString('location', location);
+
+                              var nm = spref.getString('name');
+                              var em = spref.getString('address');
+                              var ph = spref.getString('phone');
+
+                              print('---------------$address');
+
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (ctx) {
+                                return ProductList();
+                              }));
+                              datas.clear();
+                            }
                           }
 
                           if (user[0][1] == 'admin') {
@@ -171,7 +252,7 @@ class _LoginState extends State<Login> {
                             }));
                             datas.clear();
                           }
-                        }
+                        
                       }
                     },
                     child: Container(

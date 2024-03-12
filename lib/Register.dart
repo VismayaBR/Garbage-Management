@@ -21,6 +21,7 @@ class _RegisterState extends State<Register> {
   var password = TextEditingController();
 
   String selectedValue = 'User';
+  String selectedValue1 = 'Meppadi';
 
   @override
   Widget build(BuildContext context) {
@@ -64,6 +65,42 @@ class _RegisterState extends State<Register> {
                         'User',
                         'Driver',
                         'Recycling team',
+                      ].map((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(
+                            value,
+                            style: TextStyle(
+                                color: customBalck), // Adjust text color
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                  SizedBox(height: 20,),
+                   Container(
+                    height: 45,
+                    width: double.infinity,
+                    color: maincolor,
+                    child: DropdownButton<String>(
+                      value: selectedValue1,
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          selectedValue1 = newValue!;
+                        });
+                      },
+                      hint: Text('Choose Location',
+                          style: TextStyle(color: Colors.white)), // Add a label
+                      style:
+                          TextStyle(color: Colors.white), // Adjust text color
+                      dropdownColor: maincolor, // Set dropdown background color
+                      items: <String>[
+                        'Meppadi',
+                        'Edavaka',
+                        'Kottathara',
+                        'Meenangadi',
+                        'Mullankkolly',
+                        'Muppainadu'
                       ].map((String value) {
                         return DropdownMenuItem<String>(
                           value: value,
@@ -157,6 +194,7 @@ class _RegisterState extends State<Register> {
                               name: name.text,
                               email: email.text,
                               address: address.text,
+                              location: selectedValue1,
                               phone: phone.text,
                               password: password.text,
                               type:selectedValue);

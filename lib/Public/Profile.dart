@@ -5,6 +5,7 @@ import 'package:garbage_management/Public/ComplaintList.dart';
 import 'package:garbage_management/Public/UpdateProfile.dart';
 import 'package:garbage_management/constants/colors.dart';
 import 'package:garbage_management/widgets/CustomText.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfilePublic extends StatefulWidget {
   const ProfilePublic({Key? key});
@@ -14,6 +15,28 @@ class ProfilePublic extends StatefulWidget {
 }
 
 class _ProfilePublicState extends State<ProfilePublic> {
+
+
+
+  @override
+  void initState() {
+    getData();
+  }
+  var nm;
+  var em;
+  var ph;
+  var ad;
+  Future<void> getData() async {
+    SharedPreferences spref = await SharedPreferences.getInstance();
+    setState(() {
+      nm = spref.getString('name');
+     em = spref.getString('email');
+      ph = spref.getString('phone');
+       ad = spref.getString('address');
+    });
+    
+    print('Name :: $nm');
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -78,7 +101,7 @@ class _ProfilePublicState extends State<ProfilePublic> {
                      ),
                      Padding(
                        padding: const EdgeInsets.only(top: 18,left: 18,right: 18),
-                       child: CustomText(size: 16, weight: FontWeight.normal, color: customBalck, text: 'Password  :'),
+                       child: CustomText(size: 16, weight: FontWeight.normal, color: customBalck, text: 'Address  :'),
                      ),
                        Padding(
                        padding: const EdgeInsets.only(top: 18,left: 18,right: 18),
@@ -91,20 +114,20 @@ class _ProfilePublicState extends State<ProfilePublic> {
                    children: [
                      Padding(
                        padding: const EdgeInsets.only(top: 18,left: 18,right: 18),
-                       child: CustomText(size: 16, weight: FontWeight.normal, color: customBalck, text: 'Username'),
+                       child: CustomText(size: 16, weight: FontWeight.normal, color: customBalck, text: nm),
                      ),
                   
                  Padding(
                    padding: const EdgeInsets.only(top: 18,left: 18,right: 18),
-                   child: CustomText(size: 16, weight: FontWeight.normal, color: customBalck, text: 'Email'),
+                   child: CustomText(size: 16, weight: FontWeight.normal, color: customBalck, text: em),
                  ),
                  Padding(
                    padding: const EdgeInsets.only(top: 18,left: 18,right: 18),
-                   child: CustomText(size: 16, weight: FontWeight.normal, color: customBalck, text: 'Password'),
+                   child: CustomText(size: 16, weight: FontWeight.normal, color: customBalck, text: ad),
                  ),
                    Padding(
                    padding: const EdgeInsets.only(top: 18,left: 18,right: 18),
-                   child: CustomText(size: 16, weight: FontWeight.normal, color: customBalck, text: 'Mobile No'),
+                   child: CustomText(size: 16, weight: FontWeight.normal, color: customBalck, text: ph),
                  )
                   ],
                  ),

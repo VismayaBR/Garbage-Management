@@ -19,6 +19,7 @@ class OrderPage extends StatefulWidget {
 }
 
 class _OrderPageState extends State<OrderPage> {
+  
   var nm;
   var ad;
   var ph;
@@ -31,6 +32,11 @@ class _OrderPageState extends State<OrderPage> {
     ph =spref.getString('phone');
     });
     
+  }
+  @override
+  void initState() {
+    // TODO: implement initState
+    getData();
   }
 
   @override
