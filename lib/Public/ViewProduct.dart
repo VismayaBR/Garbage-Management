@@ -94,19 +94,24 @@ class _ViewProductState extends State<ViewProduct> {
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.all(18.0),
-                    child: Container(
-                      height: 50,
-                      width: 150,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: customGreen,
+                    child: InkWell(
+                      onTap: (){
+                        Navigator.pop(context);
+                      },
+                      child: Container(
+                        height: 50,
+                        width: 150,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: customGreen,
+                        ),
+                        child: Center(
+                            child: CustomText(
+                                size: 18,
+                                weight: FontWeight.bold,
+                                color: white,
+                                text: 'Cancel')),
                       ),
-                      child: Center(
-                          child: CustomText(
-                              size: 20,
-                              weight: FontWeight.bold,
-                              color: white,
-                              text: 'Cancel')),
                     ),
                   ),
                 ),
@@ -132,7 +137,7 @@ class _ViewProductState extends State<ViewProduct> {
                         ),
                         child: Center(
                             child: CustomText(
-                                size: 20,
+                                size: 18,
                                 weight: FontWeight.bold,
                                 color: white,
                                 text: 'Buy')),

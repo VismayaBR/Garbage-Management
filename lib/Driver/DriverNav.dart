@@ -4,6 +4,7 @@ import 'package:flutter_floating_bottom_bar/flutter_floating_bottom_bar.dart';
 import 'package:garbage_management/Driver/AdminNotification.dart';
 import 'package:garbage_management/Driver/Tabbar.dart';
 import 'package:garbage_management/Driver/UsersList.dart';
+import 'package:garbage_management/Driver/Warnings.dart';
 import 'package:garbage_management/Public/Driver.dart';
 import 'package:garbage_management/Public/Profile.dart';
 import 'package:garbage_management/Public/PublicHome.dart';
@@ -89,7 +90,7 @@ class _UserNavState extends State<UserNav> with SingleTickerProviderStateMixin {
             
             UsersList(),
             Tabbar(),
-            AdminNotification(),
+            Warning(),
             
           ],
         ),

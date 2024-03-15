@@ -94,8 +94,16 @@ class _LoginState extends State<Login> {
                   ),
                   InkWell(
                     onTap: () async {
-                      if (_formKey.currentState?.validate() ?? false) {
+                      if (_formKey.currentState?.validate() ?? true) {
+                        if(_emailController.text=='admin@gmail.com' && _passwordController.text=='admin@123'){
+                           Navigator.push(context,
+                                MaterialPageRoute(builder: (ctx) {
+                              return AdminNav();
+                            }));
                         print('object');
+                        }
+                       
+                       
 
                         // Call your login function asynchronously
                         var user = await login(
@@ -245,13 +253,13 @@ class _LoginState extends State<Login> {
                             }
                           }
 
-                          if (user[0][1] == 'admin') {
-                            Navigator.push(context,
-                                MaterialPageRoute(builder: (ctx) {
-                              return AdminNav();
-                            }));
-                            datas.clear();
-                          }
+                          // if (user[0][1] == 'admin') {
+                          //   Navigator.push(context,
+                          //       MaterialPageRoute(builder: (ctx) {
+                          //     return AdminNav();
+                          //   }));
+                          //   datas.clear();
+                          // }
                         
                       }
                     },

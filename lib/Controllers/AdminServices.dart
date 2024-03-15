@@ -122,24 +122,22 @@ final CollectionReference users = FirebaseFirestore.instance.collection('users')
   }
 
 // ---------Driver complaints-------------
+ Future<QuerySnapshot<Map<String, dynamic>>> getUserData() async {
+    try {
+      QuerySnapshot<Map<String, dynamic>> querySnapshot =
+          await FirebaseFirestore.instance
+              .collection('user_complaints')
+              // .where('type', isEqualTo: 'Driver')
+              .get();
 
-Future<QuerySnapshot<Map<String, dynamic>>> getDriverComplaints() async {
-  try {
-    QuerySnapshot<Map<String, dynamic>> querySnapshot =
-        await FirebaseFirestore.instance
-            .collection('complaints')
-            .where('type', isEqualTo: 'Driver')
-            .get();
+      print('Firestore Data: ${querySnapshot.docs}');
 
-    print('Firestore Data: ${querySnapshot.docs}');
-    
-    return querySnapshot;
-  } catch (e) {
-    print('Error fetching data: $e');
-    throw e; // Rethrow the exception to be caught by the FutureBuilder
+      return querySnapshot;
+    } catch (e) {
+      print('Error fetching data: $e');
+      throw e; // Rethrow the exception to be caught by the FutureBuilder
+    }
   }
-}
-
 // ---------Recycling team complaints-------------
 
 Future<QuerySnapshot<Map<String, dynamic>>> getRecyclingComplaints() async {
@@ -177,9 +175,26 @@ Future<QuerySnapshot<Map<String, dynamic>>> warningData() async {
   }
 }
 
+Future<QuerySnapshot<Map<String, dynamic>>> warningData1() async {
+  try {
+    QuerySnapshot<Map<String, dynamic>> querySnapshot =
+        await FirebaseFirestore.instance
+            .collection('warning')
+            .where('name',isEqualTo: {})
+            .get();
+
+    print('Firestore Data: ${querySnapshot.docs}');
+    
+    return querySnapshot;
+  } catch (e) {
+    print('Error fetching data: $e');
+    throw e; // Rethrow the exception to be caught by the FutureBuilder
+  }
+}
+
 // -------------send Reply-------------
 sendReply(String id, TextEditingController rply){
-  FirebaseFirestore.instance.collection('complaints').doc(id).update({
+  FirebaseFirestore.instance.collection('user_complaints').doc(id).update({
     'replay': rply.text,
     'status':1
   });

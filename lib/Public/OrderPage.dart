@@ -1,7 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:garbage_management/Public/OrderPlaced.dart';
 import 'package:garbage_management/constants/colors.dart';
 import 'package:garbage_management/widgets/CustomText.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class OrderPage extends StatefulWidget {
@@ -19,6 +21,8 @@ class OrderPage extends StatefulWidget {
 }
 
 class _OrderPageState extends State<OrderPage> {
+
+  var u_id;
   
   var nm;
   var ad;
@@ -155,7 +159,19 @@ class _OrderPageState extends State<OrderPage> {
           Padding(
             padding: const EdgeInsets.all(20),
             child: InkWell(
-              onTap: () {
+              onTap: () async {
+                  String dt1 = DateFormat('yyyy-MM-dd').format(DateTime.now());
+
+                SharedPreferences spref  = await SharedPreferences.getInstance();
+                setState(() {
+                  u_id = spref.getString('user_id');
+                });
+                FirebaseFirestore.instance.collection('orders').add({
+                  'user_Id':u_id,
+                  'product':widget.name,
+                  'price':widget.price,
+                  'date':dt1
+                });
                 Navigator.push(context, MaterialPageRoute(builder: (ctx) {
                   return OrderPlaced();
                 }));

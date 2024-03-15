@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_floating_bottom_bar/flutter_floating_bottom_bar.dart';
+import 'package:garbage_management/Public/ComplaintList.dart';
 import 'package:garbage_management/Public/Driver.dart';
 import 'package:garbage_management/Public/Profile.dart';
 import 'package:garbage_management/Public/PublicHome.dart';
@@ -86,7 +87,7 @@ class _PublicNavState extends State<PublicNav> with SingleTickerProviderStateMix
             
             PublicHome(),
             Driver(),
-            Container(color: Color.fromARGB(255, 255, 225, 225)),
+            ComplaintList(),
             
           ],
         ),

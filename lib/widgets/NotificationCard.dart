@@ -7,13 +7,13 @@ class NotifiactionCard extends StatelessWidget {
   const NotifiactionCard({
     super.key,
     required this.title,
-    required this.time,
+    // required this.time,
     required this.date,
     required this.content
   });
 
   final String title;
-  final String time;
+  // final String time;
   final String date;
   final String content;
 
@@ -28,7 +28,7 @@ class NotifiactionCard extends StatelessWidget {
         padding: const EdgeInsets.all(10),
         child: Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
          CustomText(
-              text: time,
+              text: '',
               weight: FontWeight.w400,
               size: 12,
               color: white
@@ -65,17 +65,7 @@ class NotifiactionCard extends StatelessWidget {
               size: 12,
               color: white),
                 SizedBox(height: 10,),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    InkWell(
-                      onTap: (){
-
-                      },
-                      child: CustomText(size: 12, weight: FontWeight.normal, color: white, text: 'Replay  ')),
-                    Icon(Icons.insert_comment_outlined,color: white,size: 15,)
-                  ],
-                )
+              
         ]),
       ),
     );

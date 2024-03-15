@@ -1,7 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:garbage_management/constants/colors.dart';
 import 'package:garbage_management/widgets/CustomText.dart';
 import 'package:garbage_management/widgets/UserCard.dart';
+import 'package:garbage_management/widgets/team.dart';
 
 class BioDegradable extends StatefulWidget {
   const BioDegradable({super.key});
@@ -11,35 +13,51 @@ class BioDegradable extends StatefulWidget {
 }
 
 class _BioDegradableState extends State<BioDegradable> {
+  Future<QuerySnapshot<Map<String, dynamic>>> getData() async {
+    try {
+      QuerySnapshot<Map<String, dynamic>> querySnapshot =
+          await FirebaseFirestore.instance
+              .collection('users')
+              .where('type', isEqualTo: 'bio')
+              .get();
+
+      print('Firestore Data: ${querySnapshot.docs}');
+
+      return querySnapshot;
+    } catch (e) {
+      print('Error fetching data: $e');
+      throw e; // Rethrow the exception to be caught by the FutureBuilder
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        
-        backgroundColor: maincolor,
-        title: CustomText(
-          text: "BioDegradable",
-          weight: FontWeight.w400,
-          size: 20,
-          color: customBalck
-        ),
-        centerTitle: true,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.only(left: 15, right: 15, top: 30),
-        child: 
-            ListView.builder(
-              itemCount: 8,
-              itemBuilder: (context, index) {
-                return UserCard(
-                  name: 'qwerty',
-                  address: 'qewrtyu',
-                  phone: '1234567890',
-                  
-                );
-              },
-            )
-      )
-    );
+        body: Padding(
+            padding: const EdgeInsets.only(left: 15, right: 15, top: 30),
+            child: FutureBuilder(
+                future: getData(),
+                builder: (context,
+                    AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>>
+                        snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  } else {
+                    final user = snapshot.data!.docs;
+                    return ListView.builder(
+                      itemCount: user.length,
+                      itemBuilder: (context, index) {
+                        return Team(
+                          user_id: user[index].id,
+                          name: user[index]['username'],
+                          address: user[index]['address'],
+                          phone: user[index]['phone'],
+                        );
+                      },
+                    );
+                  }
+                })));
   }
 }

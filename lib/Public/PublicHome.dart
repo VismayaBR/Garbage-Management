@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:garbage_management/Login.dart';
 import 'package:garbage_management/Public/Notification.dart';
 import 'package:garbage_management/Public/Profile.dart';
 import 'package:garbage_management/Public/ViewProduct.dart';
@@ -39,7 +40,7 @@ class _PublicHomeState extends State<PublicHome> {
         ),
         actions: [
           Padding(
-            padding: const EdgeInsets.only(top: 30, left: 18, right: 18),
+            padding: const EdgeInsets.only(top: 30, left: 18, right: 2),
             child: InkWell(
               onTap: () {
                 Navigator.push(context, MaterialPageRoute(builder: (ctx) {
@@ -48,13 +49,29 @@ class _PublicHomeState extends State<PublicHome> {
               },
               child: Icon(
                 Icons.notifications,
-                size: 35,
+                size: 23,
+                color: customGreen,
+              ),
+            ),
+          ),
+           Padding(
+            padding: const EdgeInsets.only(top: 30, left: 15, right: 18),
+            child: InkWell(
+              onTap: () {
+                Navigator.pushReplacement(context, MaterialPageRoute(builder: (ctx) {
+                  return Login();
+                }));
+              },
+              child: Icon(
+                Icons.power_settings_new_rounded,
+                size: 23,
                 color: customGreen,
               ),
             ),
           ),
         ],
       ),
+
       body: Column(
         children: [
           Text('Products'),

@@ -64,14 +64,14 @@ class AdminTabbar extends StatelessWidget {
                   tabs: [
                     Tab(
                         child: CustomText(
-                      text: "Driver",
+                      text: "Users",
                       weight: FontWeight.w400,
                       size: 14,
                       color: customBalck,
                     )),
                     Tab(
                         child: CustomText(
-                            text: "Recycling team",
+                            text: "Driver",
                             weight: FontWeight.w400,
                             size: 14,
                             color: customBalck)),

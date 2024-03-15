@@ -5,9 +5,10 @@ import 'package:garbage_management/widgets/CustomText.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
-class UserCard extends StatelessWidget {
-  const UserCard({
+class Team extends StatelessWidget {
+  const Team({
     super.key,
     required this.name,
     required this.address,
@@ -77,57 +78,23 @@ class UserCard extends StatelessWidget {
                 ),
               ],
             ),
-            StreamBuilder<QuerySnapshot>(
-              stream: FirebaseFirestore.instance
-                  .collection('garbage_status')
-                  .where('user_id', isEqualTo: user_id)
-                  .where('date', isEqualTo: DateFormat('yyyy-MM-dd').format(DateTime.now()))
-                  .snapshots(),
-              builder: (context, snapshot) {
-                if (snapshot.hasError) {
-                  return Text('Error: ${snapshot.error}');
-                } else if (snapshot.connectionState == ConnectionState.waiting) {
-                  return CircularProgressIndicator();
-                } else {
-                  final docs = snapshot.data?.docs;
-                  if (docs != null && docs.isNotEmpty) {
-                    final status = docs[0]['status'] as String?;
-                    if (status == 'collected') {
-                      return CustomText(size: 12, weight: FontWeight.normal, color: white, text: 'Collected');
-                    }
-                  }
-                  return InkWell(
-                    onTap: () async {
-                      // Logic to mark collection as complete
-                      String dt1 = DateFormat('yyyy-MM-dd').format(DateTime.now());
-                      SharedPreferences spref = await SharedPreferences.getInstance();
-                      var d_id = spref.getString('user_id');
-                      FirebaseFirestore.instance.collection('garbage_status').add({
-                        'user_id': user_id,
-                        'diver_id': d_id,
-                        'status': 'collected',
-                        'date': dt1,
-                      });
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: maincolor,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: CustomText(
-                          size: 12,
-                          weight: FontWeight.normal,
-                          color: Colors.red,
-                          text: 'Pending',
-                        ),
-                      ),
-                    ),
-                  );
-                }
-              },
-            ),
+            Container(
+              decoration: BoxDecoration(
+                color: white,
+                borderRadius: BorderRadius.circular(50),
+              ),
+              child: Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: InkWell(
+                    onTap: (){
+                        launchUrl(
+                                  Uri.parse('tel:${phone}'));
+                            },
+                    child: Icon(Icons.call,color: customGreen,size: 20,)),
+                ),
+              ),
+            )
           ],
         ),
       ),

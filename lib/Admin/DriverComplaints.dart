@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:garbage_management/Controllers/AdminServices.dart';
 import 'package:garbage_management/constants/colors.dart';
@@ -11,12 +12,14 @@ class DriverComplaints extends StatefulWidget {
 }
 
 class _DriverComplaintsState extends State<DriverComplaints> {
+
+  
   var rply = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: FutureBuilder(
-          future: getDriverComplaints(),
+          future: getUserData(),
           builder: (context, snap) {
             final complaints = snap.data?.docs ?? [];
             return ListView.builder(
@@ -72,6 +75,7 @@ class _DriverComplaintsState extends State<DriverComplaints> {
                                                     // Close the dialog
                                                     setState(() {});
                                                     Navigator.of(context).pop();
+                                                    rply.clear();
                                                   },
                                                   child: Text('Send'),
                                                 ),
