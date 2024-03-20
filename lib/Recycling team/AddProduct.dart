@@ -7,6 +7,7 @@ import 'package:garbage_management/Recycling%20team/ProductList.dart';
 import 'package:garbage_management/constants/colors.dart';
 import 'package:garbage_management/widgets/CustomTextField.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AddProduct extends StatefulWidget {
   const AddProduct({Key? key}) : super(key: key);
@@ -35,7 +36,7 @@ class _AddProductState extends State<AddProduct> {
       final ImagePicker _picker = ImagePicker();
 
       try {
-        XFile? pickedImage = await _picker.pickImage(source: ImageSource.camera);
+        XFile? pickedImage = await _picker.pickImage(source: ImageSource.gallery);
 
         if (pickedImage != null) {
           setState(() {
@@ -66,16 +67,18 @@ class _AddProductState extends State<AddProduct> {
     }
   }
 
-  void _addProductToFirestore() {
+  Future<void> _addProductToFirestore() async {
     if (_formKey.currentState?.validate() ?? false) {
 
       String imagePath = _image?.path ?? '';
-
+      SharedPreferences spref = await SharedPreferences.getInstance();
+      var sp = spref.getString('user_id');
       FirebaseFirestore.instance.collection('product').add({
         'name': _nameController.text,
         'desc': _descriptionController.text,
         'price': _priceController.text,
         'imagePath': imageUrl,
+        'id':sp
       });
 
       Navigator.push(context, MaterialPageRoute(builder: (ctx) {

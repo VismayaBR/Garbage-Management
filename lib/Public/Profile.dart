@@ -109,28 +109,30 @@ class _ProfilePublicState extends State<ProfilePublic> {
                      )
                       ],
                      ),
-                      Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                   children: [
-                     Padding(
-                       padding: const EdgeInsets.only(top: 18,left: 18,right: 18),
-                       child: CustomText(size: 16, weight: FontWeight.normal, color: customBalck, text: nm),
-                     ),
-                  
-                 Padding(
-                   padding: const EdgeInsets.only(top: 18,left: 18,right: 18),
-                   child: CustomText(size: 16, weight: FontWeight.normal, color: customBalck, text: em),
-                 ),
-                 Padding(
-                   padding: const EdgeInsets.only(top: 18,left: 18,right: 18),
-                   child: CustomText(size: 16, weight: FontWeight.normal, color: customBalck, text: ad),
-                 ),
-                   Padding(
-                   padding: const EdgeInsets.only(top: 18,left: 18,right: 18),
-                   child: CustomText(size: 16, weight: FontWeight.normal, color: customBalck, text: ph),
-                 )
-                  ],
-                 ),
+                      Expanded(
+                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.end,
+                                           children: [
+                                             Padding(
+                         padding: const EdgeInsets.only(top: 18,left: 18,right: 18),
+                         child: CustomText(size: 16, weight: FontWeight.normal, color: customBalck, text: nm),
+                                             ),
+                                          
+                                         Padding(
+                                           padding: const EdgeInsets.only(top: 18,left: 18,right: 18),
+                                           child: CustomText(size: 16, weight: FontWeight.normal, color: customBalck, text: em),
+                                         ),
+                                         Padding(
+                                           padding: const EdgeInsets.only(top: 18,left: 18,right: 18),
+                                           child: CustomText(size: 16, weight: FontWeight.normal, color: customBalck, text: ad),
+                                         ),
+                                           Padding(
+                                           padding: const EdgeInsets.only(top: 18,left: 18,right: 18),
+                                           child: CustomText(size: 16, weight: FontWeight.normal, color: customBalck, text: ph),
+                                         )
+                                          ],
+                                         ),
+                      ),
                    ],
                  ),
                 ],

@@ -1,10 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:garbage_management/Driver/AdminNotification.dart';
+import 'package:garbage_management/Login.dart';
 import 'package:garbage_management/Public/UpdateProfile.dart';
 import 'package:garbage_management/Recycling%20team/AddProduct.dart';
+import 'package:garbage_management/Recycling%20team/bookings.dart';
+import 'package:garbage_management/Recycling%20team/recycle_profile.dart';
+import 'package:garbage_management/Recycling%20team/warningNotifications.dart';
 import 'package:garbage_management/constants/colors.dart';
 import 'package:garbage_management/widgets/CustomText.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProductList extends StatefulWidget {
   const ProductList({super.key});
@@ -17,8 +22,14 @@ class _ProductListState extends State<ProductList> {
 // ----------warning list-------------
   Future<QuerySnapshot<Map<String, dynamic>>> productData() async {
     try {
+      SharedPreferences spref = await SharedPreferences.getInstance();
+      var sp = spref.getString('user_id');
+      print(sp);
+
       QuerySnapshot<Map<String, dynamic>> querySnapshot =
-          await FirebaseFirestore.instance.collection('product').get();
+          await FirebaseFirestore.instance.collection('product')
+          .where('id',isEqualTo: sp)
+          .get();
 
       print('Firestore Data: ${querySnapshot.docs}');
 
@@ -36,7 +47,7 @@ class _ProductListState extends State<ProductList> {
         leading: InkWell(
             onTap: () {
               Navigator.push(context, MaterialPageRoute(builder: (ctx) {
-                return UpdateProfile();
+                return UpdateProfileRecycle();
               }));
             },
             child: Icon(Icons.person)),
@@ -46,14 +57,20 @@ class _ProductListState extends State<ProductList> {
             child: InkWell(
                 onTap: () {
                   Navigator.push(context, MaterialPageRoute(builder: (ctx) {
-                    return AdminNotification();
+                    return WarningNotification();
                   }));
                 },
                 child: Icon(Icons.notifications)),
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Icon(Icons.power_settings_new_outlined),
+            child: InkWell(
+              onTap: (){
+                Navigator.pushReplacement(context, MaterialPageRoute(builder: (ctx){
+                  return Login();
+                }));
+              },
+              child: Icon(Icons.power_settings_new_outlined)),
           )
         ],
       ),
@@ -97,19 +114,26 @@ class _ProductListState extends State<ProductList> {
             children: [
               Padding(
                 padding: const EdgeInsets.all(28.0),
-                child: Container(
-                  child: Center(
-                      child: Padding(
-                    padding: const EdgeInsets.all(18.0),
-                    child: CustomText(
-                        size: 15,
-                        weight: FontWeight.bold,
-                        color: white,
-                        text: 'View Booking'),
-                  )),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: customGreen),
+                child: InkWell(
+                  onTap: (){
+                    Navigator.push(context, MaterialPageRoute(builder: (ctx){
+                      return Bookings();
+                    }));
+                  },
+                  child: Container(
+                    child: Center(
+                        child: Padding(
+                      padding: const EdgeInsets.all(18.0),
+                      child: CustomText(
+                          size: 15,
+                          weight: FontWeight.bold,
+                          color: white,
+                          text: 'View Booking'),
+                    )),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: customGreen),
+                  ),
                 ),
               ),
               FloatingActionButton(

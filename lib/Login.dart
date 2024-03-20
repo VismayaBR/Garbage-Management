@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:garbage_management/Admin/AdminNav.dart';
 import 'package:garbage_management/Controllers/LoginService.dart';
 import 'package:garbage_management/Driver/DriverNav.dart';
+import 'package:garbage_management/ForgotPassword.dart';
 import 'package:garbage_management/Public/PublicNavbar.dart';
 import 'package:garbage_management/Recycling%20team/ProductList.dart';
 import 'package:garbage_management/Register.dart';
+import 'package:garbage_management/ResetPassword.dart';
 import 'package:garbage_management/constants/colors.dart';
 import 'package:garbage_management/widgets/CustomText.dart';
 import 'package:garbage_management/widgets/CustomTextField.dart';
@@ -82,11 +84,18 @@ class _LoginState extends State<Login> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          CustomText(
-                              size: 15,
-                              weight: FontWeight.normal,
-                              color: customGreen,
-                              text: 'Forgot Password?'),
+                          InkWell(
+                            onTap: (){
+                              Navigator.push(context, MaterialPageRoute(builder: (ctx){
+                                return ForgotPassword();
+                              }));
+                            },
+                            child: CustomText(
+                                size: 15,
+                                weight: FontWeight.normal,
+                                color: customGreen,
+                                text: 'Forgot Password?'),
+                          ),
                         ],
                       )),
                   SizedBox(
@@ -95,15 +104,14 @@ class _LoginState extends State<Login> {
                   InkWell(
                     onTap: () async {
                       if (_formKey.currentState?.validate() ?? true) {
-                        if(_emailController.text=='admin@gmail.com' && _passwordController.text=='admin@123'){
-                           Navigator.push(context,
-                                MaterialPageRoute(builder: (ctx) {
-                              return AdminNav();
-                            }));
-                        print('object');
+                        if (_emailController.text == 'admin@gmail.com' &&
+                            _passwordController.text == 'admin@123') {
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (ctx) {
+                            return AdminNav();
+                          }));
+                          print('object');
                         }
-                       
-                       
 
                         // Call your login function asynchronously
                         var user = await login(
@@ -131,50 +139,69 @@ class _LoginState extends State<Login> {
                                   .get();
 
                           if (userSnapshot.docs.isNotEmpty) {
-                            print('===============================');
-                            setState(() {
-                              userId = userSnapshot.docs[0].id;
-                              name = userSnapshot.docs[0]['username'];
-                              address = userSnapshot.docs[0]['address'];
-                              phone = userSnapshot.docs[0]['phone'];
-                              email = userSnapshot.docs[0]['email'];
-                              location = userSnapshot.docs[0]['location'];
-                            });
+                            var status = userSnapshot.docs[0]['status'];
+                            if (status == '1') {
+                              // User is active, proceed with login
+                              setState(() {
+                                userId = userSnapshot.docs[0].id;
+                                name = userSnapshot.docs[0]['username'];
+                                address = userSnapshot.docs[0]['address'];
+                                phone = userSnapshot.docs[0]['phone'];
+                                email = userSnapshot.docs[0]['email'];
+                                location = userSnapshot.docs[0]['location'];
+                              });
 
-                            // print('.................$mechId');
-                            SharedPreferences spref =
-                                await SharedPreferences.getInstance();
-                            spref.setString('user_id', userId);
-                            spref.setString('name', name);
-                            spref.setString('address', address);
-                            spref.setString('phone', phone);
-                            spref.setString('email', email);
-                            spref.setString('location', location);
+                              SharedPreferences spref =
+                                  await SharedPreferences.getInstance();
+                              spref.setString('user_id', userId);
+                              spref.setString('name', name);
+                              spref.setString('address', address);
+                              spref.setString('phone', phone);
+                              spref.setString('email', email);
+                              spref.setString('location', location);
 
-                            var nm = spref.getString('name');
-                            var em = spref.getString('address');
-                            var ph = spref.getString('phone');
-
-                            print('---------------$address');
-
-                            Navigator.push(context,
-                                MaterialPageRoute(builder: (ctx) {
-                              return PublicNav();
-                            }));
-                            datas.clear();
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (ctx) {
+                                return PublicNav();
+                              }));
+                              datas.clear();
+                            } else {
+                              // User status is not active (status == 0)
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: Text("Error"),
+                                    content: Text(
+                                        "Your account is waiting for approval."),
+                                    actions: [
+                                      ElevatedButton(
+                                        child: Text("OK"),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            }
                           }
                         }
-                          if (user[0][1] == 'Driver') {
-                            final QuerySnapshot<Map<String, dynamic>>
-                                userSnapshot = await FirebaseFirestore.instance
-                                    .collection('users')
-                                    .where('email',
-                                        isEqualTo: _emailController.text)
-                                    .where('password',
-                                        isEqualTo: _passwordController.text)
-                                    // .where('status', isEqualTo: 1)
-                                    .get();
-                            if (userSnapshot.docs.isNotEmpty) {
+                        if (user[0][1] == 'Driver') {
+                          final QuerySnapshot<Map<String, dynamic>>
+                              userSnapshot = await FirebaseFirestore.instance
+                                  .collection('users')
+                                  .where('email',
+                                      isEqualTo: _emailController.text)
+                                  .where('password',
+                                      isEqualTo: _passwordController.text)
+                                  // .where('status', isEqualTo: 1)
+                                  .get();
+                                  
+                          if (userSnapshot.docs.isNotEmpty) {
+                            var status = userSnapshot.docs[0]['status'];
+                            if (status == '1') {
                               print('===============================');
                               setState(() {
                                 userId = userSnapshot.docs[0].id;
@@ -206,61 +233,105 @@ class _LoginState extends State<Login> {
                                 return UserNav();
                               }));
                               datas.clear();
+                            } else {
+                              // User status is not active (status == 0)
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: Text("Error"),
+                                    content: Text(
+                                        "Your account is waiting for approval."),
+                                    actions: [
+                                      ElevatedButton(
+                                        child: Text("OK"),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
                             }
                           }
-                          if (user[0][1] == 'Recycling team') {
-                            final QuerySnapshot<Map<String, dynamic>>
-                                userSnapshot = await FirebaseFirestore.instance
-                                    .collection('users')
-                                    .where('email',
-                                        isEqualTo: _emailController.text)
-                                    .where('password',
-                                        isEqualTo: _passwordController.text)
-                                    // .where('status', isEqualTo: 1)
-                                    .get();
-                            if (userSnapshot.docs.isNotEmpty) {
-                              print('===============================');
-                              setState(() {
-                                userId = userSnapshot.docs[0].id;
-                                name = userSnapshot.docs[0]['username'];
-                                address = userSnapshot.docs[0]['address'];
-                                phone = userSnapshot.docs[0]['phone'];
-                                email = userSnapshot.docs[0]['email'];
-                                location = userSnapshot.docs[0]['location'];
-                              });
+                        }
+                        if (user[0][1] == 'Recycling team') {
 
-                              // print('.................$mechId');
-                              SharedPreferences spref =
-                                  await SharedPreferences.getInstance();
-                              spref.setString('user_id', userId);
-                              spref.setString('name', name);
-                              spref.setString('address', address);
-                              spref.setString('phone', phone);
-                              spref.setString('email', email);
-                              spref.setString('location', location);
+                          final QuerySnapshot<Map<String, dynamic>>
+                              userSnapshot = await FirebaseFirestore.instance
+                                  .collection('users')
+                                  .where('email',
+                                      isEqualTo: _emailController.text)
+                                  .where('password',
+                                      isEqualTo: _passwordController.text)
+                                  // .where('status', isEqualTo: 1)
+                                  .get();
+                          if (userSnapshot.docs.isNotEmpty) {
+                              var status = userSnapshot.docs[0]['status'];
+                            if (status == '1') {
+                            print('===============================');
+                            setState(() {
+                              userId = userSnapshot.docs[0].id;
+                              name = userSnapshot.docs[0]['username'];
+                              address = userSnapshot.docs[0]['address'];
+                              phone = userSnapshot.docs[0]['phone'];
+                              email = userSnapshot.docs[0]['email'];
+                              location = userSnapshot.docs[0]['location'];
+                            });
 
-                              var nm = spref.getString('name');
-                              var em = spref.getString('address');
-                              var ph = spref.getString('phone');
+                            print('.................$userId');
+                            SharedPreferences spref =
+                                await SharedPreferences.getInstance();
+                            spref.setString('user_id', userId);
+                            spref.setString('name', name);
+                            spref.setString('address', address);
+                            spref.setString('phone', phone);
+                            spref.setString('email', email);
+                            spref.setString('location', location);
 
-                              print('---------------$address');
+                            var nm = spref.getString('name');
+                            var em = spref.getString('address');
+                            var ph = spref.getString('phone');
 
-                              Navigator.push(context,
-                                  MaterialPageRoute(builder: (ctx) {
-                                return ProductList();
-                              }));
-                              datas.clear();
+                            print('---------------$address');
+
+                            Navigator.push(context,
+                                MaterialPageRoute(builder: (ctx) {
+                              return ProductList();
+                            }));
+                            datas.clear();
+                             } else {
+                              // User status is not active (status == 0)
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: Text("Error"),
+                                    content: Text(
+                                        "Your account is waiting for approval."),
+                                    actions: [
+                                      ElevatedButton(
+                                        child: Text("OK"),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
                             }
                           }
+                        }
 
-                          // if (user[0][1] == 'admin') {
-                          //   Navigator.push(context,
-                          //       MaterialPageRoute(builder: (ctx) {
-                          //     return AdminNav();
-                          //   }));
-                          //   datas.clear();
-                          // }
-                        
+                        // if (user[0][1] == 'admin') {
+                        //   Navigator.push(context,
+                        //       MaterialPageRoute(builder: (ctx) {
+                        //     return AdminNav();
+                        //   }));
+                        //   datas.clear();
+                        // }
                       }
                     },
                     child: Container(

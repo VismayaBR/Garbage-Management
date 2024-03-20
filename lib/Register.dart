@@ -198,6 +198,13 @@ class _RegisterState extends State<Register> {
                               phone: phone.text,
                               password: password.text,
                               type:selectedValue);
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text('Registered successfully'),
+                      backgroundColor: Colors.green,
+                    ));
+                    // Navigator.pushReplacement(context, MaterialPageRoute(builder: (ctx){
+                    //   return ProductList();
+                    // }));   
                           Navigator.pop(context);
                         
                        

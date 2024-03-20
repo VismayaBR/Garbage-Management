@@ -66,24 +66,29 @@ class ComplaintList extends StatelessWidget {
                     var data = complaints[index].data() as Map<String, dynamic>;
                     var id = complaints[index].id;
                     return ComplaintCard(
-                      title: data['complaint'],
-                      reply: data['replay'],
-                      date: data['date'],
-                      status: data['status'],
+                      title: data['complaint'].toString(),
+                      reply: data['replay'].toString(),
+                      date: data['date'].toString(),
+                      status: data['status'].toString(),
                     );
                   },
                 );
               }
             }),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(context, MaterialPageRoute(builder: (ctx) {
-            return AddComplaints();
-          }));
-        },
-        child: Icon(Icons.add),
-        backgroundColor: maincolor,
+      floatingActionButton: Column(
+        children: [
+          SizedBox(height: 60,),
+          FloatingActionButton(
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (ctx) {
+                return AddComplaints();
+              }));
+            },
+            child: Icon(Icons.add,color: Colors.white,),
+            backgroundColor: customGreen,
+          ),
+        ],
       ),
     );
   }

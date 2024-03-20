@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:garbage_management/Driver/AdminNotification.dart';
 import 'package:garbage_management/Driver/BioDegradable.dart';
 import 'package:garbage_management/Driver/Degradable.dart';
+import 'package:garbage_management/Driver/Send%20Notification.dart';
 import 'package:garbage_management/Driver/UsersList.dart';
+import 'package:garbage_management/Login.dart';
 import 'package:garbage_management/constants/colors.dart';
 import 'package:garbage_management/widgets/CustomText.dart';
 
@@ -34,13 +37,13 @@ class Tabbar extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(right: 20),
               child: InkWell(
-                // onTap: () {
-                //   Navigator.push(
-                //       context,
-                //       MaterialPageRoute(
-                //         builder: (context) => (),
-                //       ));
-                // },
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => SendNotification(),
+                      ));
+                },
                 child: Stack(
                   children: [
                     Icon(
@@ -61,14 +64,11 @@ class Tabbar extends StatelessWidget {
             ),
             // SizedBox(width: 20,),
                  InkWell(
-                  // onTap: () {
-                  //   Navigator.push(
-                  //       context,
-                  //       MaterialPageRoute(
-                  //         // go to user profile screen..
-                  //         builder: (context) => Login(),
-                  //       ));
-                  // },
+                   onTap: (){
+                        Navigator.pushReplacement(context, MaterialPageRoute(builder: (ctx){
+                          return Login();
+                        }));
+                      },
                   child: Icon(Icons.power_settings_new_outlined,size: 20,)
                 ),
                 SizedBox(width: 20,),

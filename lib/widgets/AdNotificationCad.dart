@@ -33,31 +33,47 @@ class AdNotifiactionCard extends StatelessWidget {
               size: 12,
               color: white
               ),
-          Padding(
-            padding: const EdgeInsets.only(right: 10),
-            child: Align(
-                alignment: Alignment.centerLeft,
+          Align(
+              alignment: Alignment.centerLeft,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 10,bottom: 10),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment:CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      title,
-                      style: GoogleFonts.poppins(
-                          fontWeight: FontWeight.w400,
-                          fontSize: 12,
-                          color:white),
-                    ),
-                    SizedBox(height: 10,),
-                    Text(
-                      content,
-                      style: GoogleFonts.poppins(
-                          fontWeight: FontWeight.w400,
-                          fontSize: 12,
-                          color:white),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                       Text(
+                          date,
+                          style: GoogleFonts.poppins(
+                              fontWeight: FontWeight.w400,
+                              fontSize: 12,
+                              color:white),
+                        ),
+                    ],),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          title,
+                          style: GoogleFonts.poppins(
+                              fontWeight: FontWeight.w400,
+                              fontSize: 12,
+                              color:white),
+                        ),
+                        SizedBox(height: 10,),
+                        Text(
+                          content,
+                          style: GoogleFonts.poppins(
+                              fontWeight: FontWeight.w400,
+                              fontSize: 12,
+                              color:white),
+                        ),
+                      ],
                     ),
                   ],
-                )),
-          ),
+                ),
+              )),
                 ]),
       ),
     );

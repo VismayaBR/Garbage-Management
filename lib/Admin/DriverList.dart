@@ -17,9 +17,15 @@ class _DriverListState extends State<DriverList> {
       appBar: AppBar(),
       body: FutureBuilder(
         future: getDriverData(),
-        builder: (context,snap) {
-           final users = snap.data?.docs ?? [];
-          return  ListView.builder(
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            // Show circular progress indicator while loading
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          } else {
+            final users = snapshot.data?.docs ?? [];
+            return ListView.builder(
               itemCount: users.length,
               itemBuilder: (ctx, index) {
                 var request = users[index].data() as Map<String, dynamic>;
@@ -47,92 +53,98 @@ class _DriverListState extends State<DriverList> {
                               weight: FontWeight.normal,
                               color: customBalck,
                               text: request['phone'] ?? 'Loading'),
-                         request['status']=='0'? Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              InkWell(
-                                onTap: (){
-                                  rejectUsers(user_id:id);
-                                  setState(() {
-                                    
-                                  });
-                                },
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(50),
-                                    color: Colors.red,
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: CustomText(
-                                        size: 12,
-                                        weight: FontWeight.normal,
-                                        color: white,
-                                        text: 'Reject'),
-                                  ),
-                                ),
-                              ),
-                              SizedBox(width: 10,),
-                              InkWell(
-                                onTap: (){
-                                    acceptUsers(user_id:id);
-                                    setState(() {
-                                      
-                                    });
-                                },
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(50),
-                                    color: customGreen,
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: CustomText(
-                                        size: 12,
-                                        weight: FontWeight.normal,
-                                        color: white,
-                                        text: 'Accept'),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ):request['status']=='2'?Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              Container(
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(50),
-                                        color: Colors.red,
-                                      ),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: CustomText(
-                                            size: 12,
-                                            weight: FontWeight.normal,
-                                            color: white,
-                                            text: 'Rejected'),
-                                      ),
-                                    ),
-                            ],
-                          ):Row(
+                          request['status'] == '0'
+                              ? Row(
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(50),
-                                        color: customGreen,
+                                    InkWell(
+                                      onTap: () {
+                                        rejectUsers(user_id: id);
+                                        setState(() {});
+                                      },
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(50),
+                                          color: Colors.red,
+                                        ),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: CustomText(
+                                              size: 12,
+                                              weight: FontWeight.normal,
+                                              color: white,
+                                              text: 'Reject'),
+                                        ),
                                       ),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: CustomText(
-                                            size: 12,
-                                            weight: FontWeight.normal,
-                                            color: white,
-                                            text: 'Accepted'),
+                                    ),
+                                    SizedBox(width: 10,),
+                                    InkWell(
+                                      onTap: () {
+                                        acceptUsers(user_id: id);
+                                        setState(() {});
+                                      },
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(50),
+                                          color: customGreen,
+                                        ),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: CustomText(
+                                              size: 12,
+                                              weight: FontWeight.normal,
+                                              color: white,
+                                              text: 'Accept'),
+                                        ),
                                       ),
                                     ),
                                   ],
                                 )
+                              : request['status'] == '2'
+                                  ? Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.end,
+                                      children: [
+                                        Container(
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(50),
+                                            color: Colors.red,
+                                          ),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: CustomText(
+                                                size: 12,
+                                                weight: FontWeight.normal,
+                                                color: white,
+                                                text: 'Rejected'),
+                                          ),
+                                        ),
+                                      ],
+                                    )
+                                  : Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.end,
+                                      children: [
+                                        Container(
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(50),
+                                            color: customGreen,
+                                          ),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: CustomText(
+                                                size: 12,
+                                                weight: FontWeight.normal,
+                                                color: white,
+                                                text: 'Accepted'),
+                                          ),
+                                        ),
+                                      ],
+                                    )
                         ],
                       ),
                     ),
@@ -140,7 +152,8 @@ class _DriverListState extends State<DriverList> {
                 );
               },
             );
-        }
+          }
+        },
       ),
     );
   }

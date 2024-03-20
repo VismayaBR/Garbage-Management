@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:garbage_management/constants/colors.dart';
 import 'package:garbage_management/widgets/CustomText.dart';
+import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -30,11 +31,27 @@ class _DriverState extends State<Driver> {
         .where('type', isEqualTo: 'Driver')
         .snapshots();
   }
+  var status;
+  void getStatus() async {
+    String dt1 = DateFormat('yyyy-MM-dd').format(DateTime.now());
+
+    final QuerySnapshot<Map<String, dynamic>> statusSnapshot =
+        await FirebaseFirestore.instance
+            .collection('garbage_status')
+            .where('date', isEqualTo: dt1)
+            .get();
+    
+    setState(() {
+      status = statusSnapshot.docs.isEmpty ? 'Pending' : 'Collected';
+      print(status);
+    });
+  }
 
   @override
   void initState() {
     // TODO: implement initState
     getData();
+    getStatus();
   }
 
   @override
@@ -46,7 +63,9 @@ class _DriverState extends State<Driver> {
             stream: driverStream(),
             builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return CircularProgressIndicator(); // or any loading indicator
+                return Center(
+                    child:
+                        CircularProgressIndicator()); // or any loading indicator
               }
 
               if (snapshot.hasError) {
@@ -234,7 +253,7 @@ class _DriverState extends State<Driver> {
                                 size: 20,
                                 weight: FontWeight.bold,
                                 color: customBalck,
-                                text: 'Pending'))),
+                                text: status=='Collected'?'Collected':'Pending'))),
                   )
                 ],
               );

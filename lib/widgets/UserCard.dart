@@ -105,6 +105,7 @@ class UserCard extends StatelessWidget {
                       FirebaseFirestore.instance.collection('garbage_status').add({
                         'user_id': user_id,
                         'diver_id': d_id,
+                        
                         'status': 'collected',
                         'date': dt1,
                       });

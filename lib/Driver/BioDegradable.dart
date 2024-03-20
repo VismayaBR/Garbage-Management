@@ -16,10 +16,7 @@ class _BioDegradableState extends State<BioDegradable> {
   Future<QuerySnapshot<Map<String, dynamic>>> getData() async {
     try {
       QuerySnapshot<Map<String, dynamic>> querySnapshot =
-          await FirebaseFirestore.instance
-              .collection('users')
-              .where('type', isEqualTo: 'bio')
-              .get();
+          await FirebaseFirestore.instance.collection('bio_team').get();
 
       print('Firestore Data: ${querySnapshot.docs}');
 
@@ -51,9 +48,9 @@ class _BioDegradableState extends State<BioDegradable> {
                       itemBuilder: (context, index) {
                         return Team(
                           user_id: user[index].id,
-                          name: user[index]['username'],
-                          address: user[index]['address'],
-                          phone: user[index]['phone'],
+                          name: user[index]['name'],
+                          address: user[index]['location'],
+                          phone: user[index]['contact'],
                         );
                       },
                     );

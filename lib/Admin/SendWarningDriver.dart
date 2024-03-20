@@ -51,7 +51,8 @@ class _SendWarning1State extends State<SendWarning1> {
           String dt1 = DateFormat('yyyy-MM-dd').format(DateTime.now());
 
       FirebaseFirestore.instance.collection('warning').add({
-        'name': selectedDriverMap,
+        'name': selectedDriverMap!['username'],
+        'id':selectedDriverMap!['id'],
         'type':'Driver',
         'warning':warning.text,
         'date':dt1
@@ -59,6 +60,10 @@ class _SendWarning1State extends State<SendWarning1> {
       // Perform the action (e.g., send the warning)
       print(
           'Sending warning to ${selectedDriverMap!['username']}, ID: ${selectedDriverMap!['id']}, Message: ${warning.text}');
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text('Sending...'),
+                      backgroundColor: Colors.green,
+                    ));
           Navigator.pushReplacement(context, MaterialPageRoute(builder: (ctx){
             return AdminNav();
           }));

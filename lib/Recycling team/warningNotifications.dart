@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:garbage_management/Admin/Recycle%20warning.dart';
-import 'package:garbage_management/Admin/SendWarningDriver.dart';
 import 'package:garbage_management/Controllers/AdminServices.dart';
 import 'package:garbage_management/constants/colors.dart';
-import 'package:garbage_management/widgets/AdNotificationCad.dart';
 import 'package:garbage_management/widgets/CustomText.dart';
-import 'package:garbage_management/widgets/NotificationCard.dart';
 import 'package:garbage_management/widgets/WarnigCard.dart';
 
-class Warning extends StatelessWidget {
-  const Warning({super.key});
+class WarningNotification extends StatefulWidget {
+  const WarningNotification({super.key});
 
+  @override
+  State<WarningNotification> createState() => _WarningNotificationState();
+}
+
+class _WarningNotificationState extends State<WarningNotification> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

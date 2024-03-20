@@ -67,13 +67,32 @@ class _ViewProductState extends State<ViewProduct> {
                     ],
                   ),
                 ),
+                Divider(),
+                 Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                   children: [
+                     Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: CustomText(
+                        color: customGreen,
+                        size: 14,
+                        text: 'About',
+                        weight: FontWeight.w500, // Align text to the center
+                      ),
+                                     ),
+                   ],
+                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Text(
-                    widget.desc,
-                    textAlign: TextAlign.left, // Align text to the center
+                  child: CustomText(
+                    color: customBalck,
+                    text: widget.desc,
+                    size: 15,
+                    weight: FontWeight.w500,
+                    // textAlign: TextAlign.left, // Align text to the center
                   ),
                 ),
+                Divider(),
                 Padding(
                   padding: const EdgeInsets.all(18.0),
                   child: Row(
@@ -83,7 +102,7 @@ class _ViewProductState extends State<ViewProduct> {
                           size: 20,
                           weight: FontWeight.bold,
                           color: customGreen,
-                          text: widget.price),
+                          text: 'Rs. ${widget.price}'),
                     ],
                   ),
                 ),

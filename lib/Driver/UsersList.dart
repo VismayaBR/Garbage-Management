@@ -74,7 +74,7 @@ class _UsersListState extends State<UsersList> {
                     itemBuilder: (context, index) {
                       return UserCard(
                         user_id:user[index].id,
-                        name: user[index]['name'],
+                        name: user[index]['username'],
                         address: user[index]['address'],
                         phone: user[index]['phone'],
                         

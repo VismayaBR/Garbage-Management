@@ -1,6 +1,7 @@
 // -------------UserList-----------------
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/src/widgets/editable_text.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 Future<QuerySnapshot<Map<String, dynamic>>> getUsersData() async {
   try {
@@ -177,10 +178,12 @@ Future<QuerySnapshot<Map<String, dynamic>>> warningData() async {
 
 Future<QuerySnapshot<Map<String, dynamic>>> warningData1() async {
   try {
+    SharedPreferences sp = await SharedPreferences.getInstance();
+   var nm = sp.getString('name');
     QuerySnapshot<Map<String, dynamic>> querySnapshot =
         await FirebaseFirestore.instance
             .collection('warning')
-            .where('name',isEqualTo: {})
+            .where('name',isEqualTo: nm)
             .get();
 
     print('Firestore Data: ${querySnapshot.docs}');

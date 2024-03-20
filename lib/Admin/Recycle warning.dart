@@ -50,7 +50,8 @@ class _SendWarning2State extends State<SendWarning2> {
     String dt1 = DateFormat('yyyy-MM-dd').format(DateTime.now());
 
       FirebaseFirestore.instance.collection('warning').add({
-        'name': selectedRecycleMap,
+        'name': selectedRecycleMap!['username'],
+        'id':selectedRecycleMap!['id'],
         'type': 'Recycle',
         'warning': warning.text,
         'date':dt1

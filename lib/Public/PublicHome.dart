@@ -112,12 +112,12 @@ class _PublicHomeState extends State<PublicHome> {
                           }));
                         },
                         child: Container(
-                          color: maincolor,
+                          color: white,
                           height: 200,
                           child: Center(
                             child: Image.network(
                               products[index]['imagePath'].toString(),
-                              fit: BoxFit.fill,
+                              fit: BoxFit.cover,
                             ),
                           ),
                         ),

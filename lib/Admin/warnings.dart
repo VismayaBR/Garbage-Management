@@ -8,9 +8,14 @@ import 'package:garbage_management/widgets/CustomText.dart';
 import 'package:garbage_management/widgets/NotificationCard.dart';
 import 'package:garbage_management/widgets/WarnigCard.dart';
 
-class Warnings extends StatelessWidget {
+class Warnings extends StatefulWidget {
   const Warnings({super.key});
 
+  @override
+  State<Warnings> createState() => _WarningsState();
+}
+
+class _WarningsState extends State<Warnings> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,38 +48,38 @@ class Warnings extends StatelessWidget {
               FloatingActionButton(
                 onPressed: () {
                   showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              // Your custom dialog content goes here
-              return AlertDialog(
-                title: Text('Send Warning to'),
-               
-                actions: [
-                  TextButton(
-                    onPressed: () {
-                      print('object');
-                       Navigator.pushReplacement(context, MaterialPageRoute(builder: (ctx){
-                      return SendWarning1();
-                     }));
-                      // Close the dialog
-                      // Navigator.of(context).pop();
+                    context: context,
+                    builder: (BuildContext context) {
+                      // Your custom dialog content goes here
+                      return AlertDialog(
+                        title: Text('Send Warning to'),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              print('object');
+                              Navigator.pushReplacement(context,
+                                  MaterialPageRoute(builder: (ctx) {
+                                return SendWarning1();
+                              }));
+                              // Close the dialog
+                              // Navigator.of(context).pop();
+                            },
+                            child: Text('Driver'),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              print('object');
+                              Navigator.pushReplacement(context,
+                                  MaterialPageRoute(builder: (ctx) {
+                                return SendWarning2();
+                              }));
+                            },
+                            child: Text('Recycling team'),
+                          ),
+                        ],
+                      );
                     },
-                    child: Text('Driver'),
-                  ),
-                   TextButton(
-                    onPressed: () {
-                      print('object');
-                       Navigator.pushReplacement(context, MaterialPageRoute(builder: (ctx){
-                      return SendWarning2();
-                     }));
-                    },
-                    child: Text('Recycling team'),
-                  ),
-                ],
-              );
-            },
-          );
-
+                  );
                 },
                 child: Icon(Icons.add),
               ),
@@ -83,29 +88,49 @@ class Warnings extends StatelessWidget {
               ),
               Expanded(
                 child: FutureBuilder(
-                  future: warningData(),
-                  builder: (context,snap) {
+                    future: warningData(),
+                    builder: (context, snap) {
                       final users = snap.data?.docs ?? [];
-                    return ListView.builder(
-                      itemCount: users.length,
-                      itemBuilder: (context, index) {
-                         var request = users[index].data() as Map<String, dynamic>;
-                         var id = users[index].id;
-                        return WarningCard(
-                            title: 'To : ${request['name']['username']}',
-                            time: '1.00 pm',
-                            date: '12/02/2024',
-                            content:
-                                 request['warning']// Add the actual date field if available
-                            );
-                      },
-                    );
-                  }
-                ),
+                      return ListView.builder(
+                        itemCount: users.length,
+                        itemBuilder: (ctx, index) {
+                          var request =
+                              users[index].data() as Map<String, dynamic>;
+                          var id = users[index].id;
+                          return Card(
+                              child: ListTile(
+                            tileColor: maincolor,
+                            title: Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    CustomText(
+                                        size: 15,
+                                        weight: FontWeight.normal,
+                                        color: customBalck,
+                                        text: 'To : ${request['type']}' ??
+                                            'Loading'),
+                                    CustomText(
+                                        size: 15,
+                                        weight: FontWeight.normal,
+                                        color: customBalck,
+                                        text: 'Name : ${request['name']}' ??
+                                            'Loading'),
+                                    CustomText(
+                                        size: 15,
+                                        weight: FontWeight.normal,
+                                        color: Colors.red,
+                                        text: request['warning'] ?? 'Loading'),
+                                  ]),
+                            ),
+                          ));
+                        },
+                      );
+                    }),
               ),
             ],
           )),
     );
   }
- 
 }

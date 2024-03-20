@@ -45,13 +45,13 @@ class ComplaintCard extends StatelessWidget {
                     SizedBox(
                       height: 10,
                     ),
-                    Text(
-                      status,
-                      style: GoogleFonts.poppins(
-                          fontWeight: FontWeight.w400,
-                          fontSize: 12,
-                          color: white),
-                    ),
+                    // Text(
+                    //   status,
+                    //   style: GoogleFonts.poppins(
+                    //       fontWeight: FontWeight.w400,
+                    //       fontSize: 12,
+                    //       color: white),
+                    // ),
                   ],
                 )),
           ),

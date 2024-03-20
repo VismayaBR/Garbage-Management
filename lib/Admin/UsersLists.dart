@@ -2,7 +2,6 @@
 import 'package:garbage_management/Controllers/AdminServices.dart';
 import 'package:garbage_management/constants/colors.dart';
 import 'package:garbage_management/widgets/CustomText.dart';
-
 class UsersLists extends StatefulWidget {
   const UsersLists({super.key});
   @override
@@ -15,8 +14,19 @@ class _UsersListsState extends State<UsersLists> {
     return Scaffold(
       appBar: AppBar(),
       body: FutureBuilder(
-          future: getUsersData(),
-          builder: (context, snap) {
+        future: getUsersData(),
+        builder: (context, snap) {
+          if (snap.connectionState == ConnectionState.waiting) {
+            // Display a circular progress indicator while waiting for data
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (snap.hasError) {
+            // Handle error case
+            return Center(
+              child: Text("Error: ${snap.error}"),
+            );
+          } else {
             final users = snap.data?.docs ?? [];
             return ListView.builder(
               itemCount: users.length,
@@ -46,14 +56,14 @@ class _UsersListsState extends State<UsersLists> {
                               weight: FontWeight.normal,
                               color: customBalck,
                               text: request['phone'] ?? 'Loading'),
-                         request['status']=='0'? Row(
+                          request['status']=='0'? Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               InkWell(
                                 onTap: (){
                                   rejectUsers(user_id:id);
                                   setState(() {
-                                    
+
                                   });
                                 },
                                 child: Container(
@@ -74,10 +84,10 @@ class _UsersListsState extends State<UsersLists> {
                               SizedBox(width: 10,),
                               InkWell(
                                 onTap: (){
-                                    acceptUsers(user_id:id);
-                                    setState(() {
-                                      
-                                    });
+                                  acceptUsers(user_id:id);
+                                  setState(() {
+
+                                  });
                                 },
                                 child: Container(
                                   decoration: BoxDecoration(
@@ -99,39 +109,39 @@ class _UsersListsState extends State<UsersLists> {
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               Container(
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(50),
-                                        color: Colors.red,
-                                      ),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: CustomText(
-                                            size: 12,
-                                            weight: FontWeight.normal,
-                                            color: white,
-                                            text: 'Rejected'),
-                                      ),
-                                    ),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(50),
+                                  color: Colors.red,
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: CustomText(
+                                      size: 12,
+                                      weight: FontWeight.normal,
+                                      color: white,
+                                      text: 'Rejected'),
+                                ),
+                              ),
                             ],
                           ):Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(50),
-                                        color: customGreen,
-                                      ),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: CustomText(
-                                            size: 12,
-                                            weight: FontWeight.normal,
-                                            color: white,
-                                            text: 'Accepted'),
-                                      ),
-                                    ),
-                                  ],
-                                )
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(50),
+                                  color: customGreen,
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: CustomText(
+                                      size: 12,
+                                      weight: FontWeight.normal,
+                                      color: white,
+                                      text: 'Accepted'),
+                                ),
+                              ),
+                            ],
+                          )
                         ],
                       ),
                     ),
@@ -139,7 +149,9 @@ class _UsersListsState extends State<UsersLists> {
                 );
               },
             );
-          }),
+          }
+        },
+      ),
     );
   }
 }
