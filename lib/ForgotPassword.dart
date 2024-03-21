@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:garbage_management/ResetPassword.dart';
+import 'package:garbage_management/constants/colors.dart';
 import 'package:garbage_management/widgets/CustomTextField.dart';
 
 class ForgotPassword extends StatefulWidget {
@@ -37,12 +39,19 @@ class _ForgotPasswordState extends State<ForgotPassword> {
               Padding(
                 padding: const EdgeInsets.all(10.0),
                 child: ElevatedButton(
-                    onPressed: () {
+                    onPressed: () async {
                       if (_formKey.currentState?.validate() ?? true) {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (ctx) {
-                          return ResetPassword(email: email.text);
-                        }));
+                        bool emailExists = await checkEmailExists(email.text);
+                        if (emailExists) {
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (ctx) {
+                            return ResetPassword(email: email.text);
+                          }));
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('Email does not exist',style: TextStyle(color: white),),backgroundColor: customGreen,),
+                          );
+                        }
                       }
                     },
                     child: Text('Nextpage')),
@@ -52,5 +61,19 @@ class _ForgotPasswordState extends State<ForgotPassword> {
         ),
       ),
     );
+  }
+
+  Future<bool> checkEmailExists(String email) async {
+    try {
+      // Query Firestore collection "users" for the provided email
+      var querySnapshot = await FirebaseFirestore.instance.collection('users')
+          .where('email', isEqualTo: email)
+          .get();
+      // Check if any documents match the provided email
+      return querySnapshot.docs.isNotEmpty;
+    } catch (e) {
+      print("Error checking email: $e");
+      return false;
+    }
   }
 }

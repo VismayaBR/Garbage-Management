@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'dart:ui' as ui;
 
@@ -32,9 +33,13 @@ class _ResetPasswordState extends State<ResetPassword> {
         Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            CustomText(size: 20, weight: FontWeight.w500, color: customGreen, text: 'Reset Password'),
+            CustomText(
+                size: 20,
+                weight: FontWeight.w500,
+                color: customGreen,
+                text: 'Reset Password'),
             Padding(
-              padding: const EdgeInsets.only(left: 45,right: 20),
+              padding: const EdgeInsets.only(left: 45, right: 20),
               child: CustomTextField(
                 label: 'New Password',
                 controller: password,
@@ -48,7 +53,7 @@ class _ResetPasswordState extends State<ResetPassword> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(left: 45,right: 20),
+              padding: const EdgeInsets.only(left: 45, right: 20),
               child: CustomTextField(
                 label: 'Confirm Password',
                 controller: cpassword,
@@ -63,15 +68,37 @@ class _ResetPasswordState extends State<ResetPassword> {
             ),
             Padding(
               padding: const EdgeInsets.all(18.0),
-              child: ElevatedButton(onPressed: (){
-                if(cpassword.text == password.text){
-                  print('equal');
+              child: ElevatedButton(
+                  onPressed: () async {
+                    if (cpassword.text == password.text) {
+                      print('equal');
+                      QuerySnapshot querySnapshot = await FirebaseFirestore
+                          .instance
+                          .collection('users')
+                          .where('email', isEqualTo: widget.email)
+                          .get();
 
-                }
-                else{
-                  print('not equal');
-                }
-              }, child: Text('Done')),
+                      if (querySnapshot.docs.isNotEmpty) {
+                        DocumentReference userDocRef =
+                            querySnapshot.docs.first.reference;
+                        await userDocRef.update({
+                          'password': password.text,
+                        });
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text("Password updated",style: TextStyle(color: white),),backgroundColor: customGreen,),
+                          );
+                      } else {
+                        // Handle case where no documents match the query
+                        print('No user found with the provided email.');
+                      }
+                    } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text("Passwords are doesn't match",style: TextStyle(color: white),),backgroundColor: customGreen,),
+                          );
+                      print('not equal');
+                    }
+                  },
+                  child: Text('Done')),
             )
           ],
         )

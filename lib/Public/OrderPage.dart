@@ -21,22 +21,21 @@ class OrderPage extends StatefulWidget {
 }
 
 class _OrderPageState extends State<OrderPage> {
-
   var u_id;
-  
+
   var nm;
   var ad;
   var ph;
   Future<void> getData() async {
     SharedPreferences spref = await SharedPreferences.getInstance();
     setState(() {
-      nm =spref.getString('name');
+      nm = spref.getString('name');
       print(nm);
-    ad =spref.getString('address');
-    ph =spref.getString('phone');
+      ad = spref.getString('address');
+      ph = spref.getString('phone');
     });
-    
   }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -108,12 +107,20 @@ class _OrderPageState extends State<OrderPage> {
                         text: widget.price),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(top: 20, right: 20),
-                    child: CustomText(
-                        size: 16,
-                        weight: FontWeight.normal,
-                        color: customBalck,
-                        text: '01/03/2024'),
+                    padding: const EdgeInsets.only(top: 20, right: 0),
+                    child: SizedBox(
+                      width: 150,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          CustomText(
+                              size: 14,
+                              weight: FontWeight.normal,
+                              color: customBalck,
+                              text: 'Delivery estimated within 5 days'),
+                        ],
+                      ),
+                    ),
                   )
                 ],
               ),
@@ -148,6 +155,16 @@ class _OrderPageState extends State<OrderPage> {
                         weight: FontWeight.w400,
                         color: customBalck,
                         text: ph),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        CustomText(
+                            size: 13,
+                            weight: FontWeight.w400,
+                            color: Colors.red,
+                            text: 'Cash on delivery is only available'),
+                      ],
+                    ),
                   ],
                 ),
               ],
@@ -160,17 +177,17 @@ class _OrderPageState extends State<OrderPage> {
             padding: const EdgeInsets.all(20),
             child: InkWell(
               onTap: () async {
-                  String dt1 = DateFormat('yyyy-MM-dd').format(DateTime.now());
+                String dt1 = DateFormat('yyyy-MM-dd').format(DateTime.now());
 
-                SharedPreferences spref  = await SharedPreferences.getInstance();
+                SharedPreferences spref = await SharedPreferences.getInstance();
                 setState(() {
                   u_id = spref.getString('user_id');
                 });
                 FirebaseFirestore.instance.collection('orders').add({
-                  'user_Id':u_id,
-                  'product':widget.name,
-                  'price':widget.price,
-                  'date':dt1
+                  'user_Id': u_id,
+                  'product': widget.name,
+                  'price': widget.price,
+                  'date': dt1
                 });
                 Navigator.push(context, MaterialPageRoute(builder: (ctx) {
                   return OrderPlaced();
